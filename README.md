@@ -1,9 +1,13 @@
 # 🚌 Erzurum Otobüs Hattı Bulucu
 
 ## Hangi problemi çözüyor? Kimin için?
-Bir Endüstri Mühendisliği öğrencisi olarak Erzurum'daki toplu taşıma duraklarında yaptığım saha gözlemlerinde, bazı duraklarda hat listelerinin yırtık, eksik veya okunamaz olduğunu, bazılarında ise durak adı ve numarasının bulunmadığını tespit ettim. Bu durum özellikle Erzurum'a yeni gelen öğrencileri, ziyaretçileri ve şehri henüz tanımayan yolcuları zorluyor.
+Bir Endüstri Mühendisliği öğrencisi olarak Erzurum'daki duraklarda saha gözlemi yaptım. Birçok durakta hat listesinin yırtık, eksik veya okunamaz olduğunu, bazı duraklarda ise durak adı ve numarasının hiç bulunmadığını gördüm. Bu durumda yolcu, hangi durakta olduğunu ve gideceği yere hangi hatla ulaşabileceğini öğrenemiyor.
 
-**Erzurum Otobüs Hattı Bulucu**, bu fiziksel bilgi eksikliğine dijital bir alternatif sunar: kullanıcı durak adı veya numarasıyla o duraktan geçen hatları bulabilir, GPS ile yakındaki durakları görebilir ve "nereden-nereye" aramasıyla aktarmasız hatları sorgulayabilir.
+Sorun en çok Erzurum'a yeni gelen öğrencileri, ziyaretçileri ve şehri tanımayan yolcuları etkiliyor. Gözlemime göre mevcut uygulamalar ilk kullanımda anlaşılması zor olabiliyor, özellikle hattın hangi yönde gittiği (gidiş/dönüş) yeni gelen biri için net değil.
+
+**Erzurum Otobüs Hattı Bulucu**, bu kullanıcılar için sade bir araçtır:
+- **Şu an:** durak adı veya numarasıyla o duraktan geçen hatları bulma, GPS ile yakındaki durakları görme, "nereden-nereye" aramasıyla aktarmasız hat bulma.
+- **Planlanan:** gidiş/dönüş yönlerinin ayrı gösterimi, harita üzerinde güzergâh, eksik veya hatalı durak bilgisi bildirme (bkz. pano).
 
 ## 📋 İş takip panosu
 👉 **Pano:** https://github.com/users/sabirenurtunc06/projects/1
