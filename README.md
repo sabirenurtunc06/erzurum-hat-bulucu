@@ -7,7 +7,7 @@ Sorun en çok Erzurum'a yeni gelen öğrencileri, ziyaretçileri ve şehri tanı
 
 **Erzurum Otobüs Hattı Bulucu**, bu kullanıcılar için sade bir araçtır:
 - **Şu an:** durak adı veya numarasıyla o duraktan geçen hatları bulma, GPS ile yakındaki durakları görme, "nereden-nereye" aramasıyla aktarmasız hat bulma.
-- **Planlanan:** gidiş/dönüş yönlerinin ayrı gösterimi, harita üzerinde güzergâh, eksik veya hatalı durak bilgisi bildirme (bkz. pano).
+- **Planlanan:** gidiş/dönüş yönlerinin ayrı gösterimi, harita üzerinde güzergâh, eksik veya hatalı durak bilgisi bildirme ([panoya git](https://github.com/users/sabirenurtunc06/projects/1)
 
 ## 📋 İş takip panosu
 👉 **Pano:** https://github.com/users/sabirenurtunc06/projects/1
