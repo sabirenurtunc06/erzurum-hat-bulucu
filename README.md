@@ -6,7 +6,7 @@ Bir Endüstri Mühendisliği öğrencisi olarak Erzurum'daki toplu taşıma dura
 **Erzurum Otobüs Hattı Bulucu**, bu fiziksel bilgi eksikliğine dijital bir alternatif sunar: kullanıcı durak adı veya numarasıyla o duraktan geçen hatları bulabilir, GPS ile yakındaki durakları görebilir ve "nereden-nereye" aramasıyla aktarmasız hatları sorgulayabilir.
 
 ## 📋 İş takip panosu
-👉 **Pano:** `BURAYA_GITHUB_PROJECTS_LINKI`
+👉 **Pano:** https://github.com/users/sabirenurtunc06/projects/1
 Görev listesi ve kabul kriterleri: [PANO.md](PANO.md)
 
 ## Teknolojiler
@@ -14,8 +14,8 @@ Python 3.10+, FastAPI, GTFS verisi (`data/gtfs/`), tek sayfalık HTML/JS arayüz
 
 ## Projeyi çalıştırma
 ```bash
-git clone https://github.com/musanmaz/<REPO_ADI>.git
-cd <REPO_ADI>
+git clone https://github.com/sabirenurtunc06/erzurum-hat-bulucu.git
+cd erzurum-hat-bulucu
 python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
