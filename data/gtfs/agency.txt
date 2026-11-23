@@ -1,0 +1,4 @@
+agency_id,agency_name,agency_url,agency_timezone
+6,MİNİBÜSÇÜLER DERNEĞİ,https://www.kentkart.com/,Europe/Istanbul
+2,ERZURUM BELEDİYE,https://www.kentkart.com/,Europe/Istanbul
+3,ÖZEL HALK OTOBÜSLERİ,https://www.kentkart.com/,Europe/Istanbul

@@ -1,0 +1,454 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Erzurum Otobüs Hattı Bulucu</title>
+
+<style>
+:root { --mavi:#1f5eff; --gri:#5b6472; --arka:#f3f5f9; --kenar:#dfe3ea; }
+* { box-sizing:border-box; margin:0; padding:0;
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+body { background:var(--arka); color:#1d2433; padding:24px 12px; }
+.kutu { max-width:760px; margin:0 auto; background:#fff; border-radius:16px;
+        padding:28px; box-shadow:0 4px 20px rgba(0,0,0,.07); }
+h1 { font-size:26px; margin-bottom:8px; }
+h3 { font-size:17px; margin-bottom:6px; }
+.alt, .aciklama { color:var(--gri); font-size:14px; margin-bottom:14px; line-height:1.5; }
+.sekmeler, .yontemler { display:flex; gap:8px; margin:16px 0; flex-wrap:wrap; }
+.sekme, .yontem { flex:1; background:#eef1f7; color:#1d2433; }
+.sekme.aktif, .yontem.aktif { background:var(--mavi); color:#fff; }
+.bolum { margin-top:8px; }
+.satir { display:flex; gap:8px; flex-wrap:wrap; }
+input { flex:1; min-width:180px; padding:11px 12px; border:1px solid var(--kenar);
+        border-radius:10px; font-size:15px; }
+button { padding:11px 16px; border:0; border-radius:10px; background:var(--mavi);
+         color:#fff; font-size:15px; font-weight:600; cursor:pointer; }
+button:hover { opacity:.9; }
+.tam-genislik { width:100%; }
+.sonuc { margin-top:18px; display:grid; gap:10px; }
+.hat { display:flex; gap:12px; align-items:center; border:1px solid var(--kenar);
+       border-radius:12px; padding:12px; }
+.kod { background:var(--mavi); color:#fff; font-weight:700; border-radius:8px;
+       padding:8px 12px; min-width:58px; text-align:center; }
+.bilgi { font-size:14px; line-height:1.5; }
+.durak-karti { border:1px solid var(--kenar); border-radius:12px; padding:12px; }
+.durak-karti p { color:var(--gri); font-size:13px; margin-top:4px; }
+.durak-adi { background:transparent; color:var(--mavi); padding:0; font-size:15px;
+             font-weight:700; text-align:left; }
+.durak-adi:hover { background:transparent; text-decoration:underline; }
+.mesaj { margin-top:14px; color:var(--gri); font-size:14px; }
+footer { text-align:center; color:var(--gri); font-size:12px; margin-top:18px; }
+</style>
+</head>
+<body>
+
+<div class="kutu">
+
+  <h1>🚌 Erzurum Otobüs Hattı Bulucu</h1>
+
+  <p class="alt">
+    Bulunduğun durağı veya gitmek istediğin yeri belirle,
+    sana uygun otobüs hatlarını bul.
+  </p>
+
+  <div class="sekmeler">
+    <button class="sekme aktif" id="sekmeDurak"
+      onclick="sekmeDegistir('durak')">
+      Durak Bul
+    </button>
+
+    <button class="sekme" id="sekmeGuzergah"
+      onclick="sekmeDegistir('guzergah')">
+      Nereden Nereye
+    </button>
+  </div>
+
+  <div id="panelDurak">
+
+    <div class="yontemler">
+      <button class="yontem aktif" id="yontemNo"
+        onclick="yontemDegistir('no')">
+        Durak Numarası
+      </button>
+
+      <button class="yontem" id="yontemKonum"
+        onclick="yontemDegistir('konum')">
+        Konumumdan Bul
+      </button>
+
+      <button class="yontem" id="yontemAd"
+        onclick="yontemDegistir('ad')">
+        Durak Adıyla Bul
+      </button>
+    </div>
+
+    <div id="panelNo" class="bolum">
+      <h3>Durak numarasıyla ara</h3>
+      <p class="aciklama">
+        Durak tabelasında yazan numarayı girerek o duraktan geçen
+        hatları öğrenebilirsin.
+      </p>
+
+      <div class="satir">
+        <input id="durakNo" placeholder="Örn: 30147"
+          onkeydown="if(event.key==='Enter')durakNoAra()">
+
+        <button onclick="durakNoAra()">Hatları Bul</button>
+      </div>
+    </div>
+
+    <div id="panelKonum" class="bolum" style="display:none">
+      <h3>Konumundan en yakın durakları bul</h3>
+      <p class="aciklama">
+        Konum izni vererek çevrendeki en yakın durakları listeleyebilirsin.
+      </p>
+
+      <button class="tam-genislik" onclick="konumdanDurakBul()">
+        📍 Konumumu Kullan
+      </button>
+    </div>
+
+    <div id="panelAd" class="bolum" style="display:none">
+      <h3>Durak adıyla ara</h3>
+      <p class="aciklama">
+        Üniversite, Tebrizkapı veya Yıldızkent gibi bir durak ya da
+        bölge adı yazabilirsin.
+      </p>
+
+      <div class="satir">
+        <input id="durakSorgu"
+          placeholder="Örn: Üniversite, Tebrizkapı..."
+          onkeydown="if(event.key==='Enter')durakAra()">
+
+        <button onclick="durakAra()">Ara</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="panelGuzergah" style="display:none">
+
+    <div class="bolum">
+      <h3>Nereden nereye gitmek istiyorsun?</h3>
+      <p class="aciklama">
+        Başlangıç ve varış noktalarını girerek aktarmasız hatları bul.
+      </p>
+
+      <div class="satir">
+        <input id="nereden"
+          placeholder="Bulunduğun durak. Örn: Yakutiye 132">
+
+        <input id="nereye"
+          placeholder="Gitmek istediğin yer. Örn: Üniversite">
+
+        <button onclick="guzergahAra()">Bul</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sonuc" id="sonuc"></div>
+  <div class="mesaj" id="mesaj"></div>
+
+</div>
+
+<footer>
+  Erzurum Otobüs Hattı Bulucu — Güncel Yazılım Geliştirme Süreçleri ve DevOps dersi projesi
+</footer>
+
+<script>
+
+function sekmeDegistir(mod) {
+
+  document.getElementById('panelDurak').style.display =
+    mod === 'durak' ? '' : 'none';
+
+  document.getElementById('panelGuzergah').style.display =
+    mod === 'guzergah' ? '' : 'none';
+
+  document.getElementById('sekmeDurak').classList.toggle(
+    'aktif', mod === 'durak'
+  );
+
+  document.getElementById('sekmeGuzergah').classList.toggle(
+    'aktif', mod === 'guzergah'
+  );
+
+  temizle();
+}
+
+function yontemDegistir(mod) {
+
+  ['no', 'konum', 'ad'].forEach(yontem => {
+
+    document.getElementById('panel' + (
+      yontem === 'no' ? 'No' :
+      yontem === 'konum' ? 'Konum' : 'Ad'
+    )).style.display = yontem === mod ? '' : 'none';
+
+    document.getElementById('yontem' + (
+      yontem === 'no' ? 'No' :
+      yontem === 'konum' ? 'Konum' : 'Ad'
+    )).classList.toggle('aktif', yontem === mod);
+
+  });
+
+  temizle();
+}
+
+function temizle() {
+  document.getElementById('sonuc').innerHTML = '';
+  document.getElementById('mesaj').textContent = '';
+}
+
+function mesajGoster(metin) {
+  document.getElementById('mesaj').textContent = metin;
+}
+
+async function apiIstek(url) {
+  const cevap = await fetch(url);
+
+  if (!cevap.ok) {
+    throw new Error('Sunucu isteği başarısız oldu. HTTP: ' + cevap.status);
+  }
+
+  return await cevap.json();
+}
+
+function hatKarti(hat, ekBilgi) {
+
+  return '<div class="hat">' +
+    '<span class="kod">' + guvenliMetin(hat.kod) + '</span>' +
+    '<span class="bilgi"><b>' + guvenliMetin(hat.ad) + '</b>' +
+    (ekBilgi ? '<br>' + guvenliMetin(ekBilgi) : '') +
+    '</span></div>';
+}
+
+function guvenliMetin(metin) {
+  return String(metin ?? '').replace(/[&<>"']/g, karakter => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[karakter]);
+}
+
+// Durak numarasıyla geçen hatları bulma
+async function durakNoAra() {
+
+  const no = document.getElementById('durakNo').value.trim();
+
+  if (!no) {
+    mesajGoster('Lütfen durak numarasını gir.');
+    return;
+  }
+
+  temizle();
+  mesajGoster('Durak aranıyor...');
+
+  try {
+
+    const cevap = await apiIstek(
+      '/api/durak-no-hatlari?durak_no=' + encodeURIComponent(no)
+    );
+
+    if (!cevap.durak) {
+      mesajGoster(cevap.mesaj || 'Durak bulunamadı.');
+      return;
+    }
+
+    document.getElementById('sonuc').innerHTML =
+      (cevap.hatlar || [])
+        .map(h => hatKarti(
+          h,
+          'Eşleşen durak: ' + h.eslesen_duraklar.join(', ')
+        ))
+        .join('');
+
+    mesajGoster(
+      cevap.mesaj || 'Sonuç bulunamadı.'
+    );
+
+  } catch (hata) {
+    mesajGoster('Hata: ' + hata.message);
+  }
+}
+
+// GPS ile en yakın durakları bulma
+function konumdanDurakBul() {
+
+  temizle();
+
+  if (!navigator.geolocation) {
+    mesajGoster('Tarayıcınız konum özelliğini desteklemiyor.');
+    return;
+  }
+
+  mesajGoster('Konumunuz alınıyor...');
+
+  navigator.geolocation.getCurrentPosition(
+
+    async function(position) {
+
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      try {
+
+        const cevap = await apiIstek(
+          '/api/yakindaki-duraklar?lat=' + lat +
+          '&lon=' + lon + '&limit=5'
+        );
+
+        const duraklar = cevap.duraklar || [];
+
+        document.getElementById('sonuc').innerHTML =
+  duraklar.map(d =>
+
+    '<div class="durak-karti">' +
+
+    '<button class="durak-adi" onclick="secilenDuraktanHatBul(\'' +
+    guvenliMetin(d.durak_no) + '\')">' +
+    guvenliMetin(d.ad) +
+    '</button>' +
+
+    '<p>Durak No: ' + guvenliMetin(d.durak_no) +
+    ' · Yaklaşık ' + guvenliMetin(d.mesafe_metre) +
+    ' metre uzaklıkta</p>' +
+
+    '</div>'
+
+     ).join('');
+
+        mesajGoster(
+          duraklar.length
+            ? 'Konumunuza en yakın ' + duraklar.length + ' durak listelendi.'
+            : 'Yakınınızda durak bulunamadı.'
+        );
+
+      } catch (hata) {
+        mesajGoster('Hata: ' + hata.message);
+      }
+    },
+
+    function(hata) {
+
+      let aciklama = 'Konum alınamadı.';
+
+      if (hata.code === 1) {
+        aciklama = 'Konum izni verilmedi. Durak numarası veya adıyla arama yapabilirsiniz.';
+      } else if (hata.code === 2) {
+        aciklama = 'Konum bilgisine ulaşılamadı.';
+      } else if (hata.code === 3) {
+        aciklama = 'Konum isteği zaman aşımına uğradı.';
+      }
+
+      mesajGoster(aciklama);
+    },
+
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    }
+  );
+}
+
+// GPS sonucundaki durağın hatlarını bulma
+async function secilenDuraktanHatBul(no) {
+
+  document.getElementById('durakNo').value = no;
+
+  yontemDegistir('no');
+
+  await durakNoAra();
+}
+
+// Durak adıyla geçen hatları bulma
+async function durakAra() {
+
+  const q = document.getElementById('durakSorgu').value.trim();
+
+  if (q.length < 2) {
+    mesajGoster('Lütfen en az 2 karakter gir.');
+    return;
+  }
+
+  temizle();
+  mesajGoster('Durak aranıyor...');
+
+  try {
+
+    const cevap = await apiIstek(
+      '/api/durak?q=' + encodeURIComponent(q)
+    );
+
+    document.getElementById('sonuc').innerHTML =
+      (cevap.hatlar || [])
+        .map(h => hatKarti(
+          h,
+          'Eşleşen durak: ' + h.eslesen_duraklar.join(', ')
+        ))
+        .join('');
+
+    mesajGoster(
+      cevap.sonuc_sayisi
+        ? cevap.sonuc_sayisi + ' farklı hat bulundu.'
+        : 'Sonuç bulunamadı. Durak adını farklı yazmayı dene.'
+    );
+
+  } catch (hata) {
+    mesajGoster('Hata: ' + hata.message);
+  }
+}
+
+// Nereden nereye güzergâh arama
+async function guzergahAra() {
+
+  const nereden = document.getElementById('nereden').value.trim();
+  const nereye = document.getElementById('nereye').value.trim();
+
+  if (nereden.length < 2 || nereye.length < 2) {
+    mesajGoster('Lütfen başlangıç ve varış noktalarını gir.');
+    return;
+  }
+
+  temizle();
+  mesajGoster('Uygun hatlar aranıyor...');
+
+  try {
+
+    const cevap = await apiIstek(
+      '/api/guzergah?nereden=' + encodeURIComponent(nereden) +
+      '&nereye=' + encodeURIComponent(nereye)
+    );
+
+    document.getElementById('sonuc').innerHTML =
+      (cevap.hatlar || [])
+        .map(h => {
+
+          const durakBilgileri = (h.durak_eslesmeleri || [])
+            .map(eslesme =>
+              eslesme.nereden_durak + ' → ' + eslesme.nereye_durak
+            )
+            .join(' | ');
+
+          return hatKarti(h, durakBilgileri);
+
+        })
+        .join('');
+
+    mesajGoster(cevap.mesaj || '');
+
+  } catch (hata) {
+    mesajGoster('Hata: ' + hata.message);
+  }
+}
+
+</script>
+
+</body>
+</html>
